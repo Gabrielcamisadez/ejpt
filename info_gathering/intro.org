@@ -1,0 +1,35 @@
+#+title: Intro
+#+author: ilak
+
+* learning objectives
+- *learn about the difference between active and passive information gathering*
+
+- *learn how to perform passive information gathering by leveraging various tools and resources*
+
+- *perform active information gathering*
+
+
+* information gathering
+is the first step of any penetration test and involves gathering or collecting information about an individual,company or collecting information about an individual
+
+the more information you have on your target, the more successful you will be during the latter stages of a penetration test
+
+information gathering is typically broken down into two types:
+
+- *passive information gathering*
+  involves gathering as much information as possible without actively engaging with the target
+
+- *active information gathering*
+  involves gathering as much information as possible by actively engaging with the target system
+
+** passive information gathering
+- identifying IP addresses & DNS information
+- identifying domain names and domain ownership information
+- identifying email addresses and social media profiles
+- identifying web technologies being used on target files
+- identifying subdomains
+
+** active information gathering
+- discovering open ports on target systems
+- learning about the internal infrastructure of a target/organization
+- enumerating information from target systems
