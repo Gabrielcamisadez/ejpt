@@ -18,3 +18,132 @@ procurar por
 - *robots.txt*
 - *sitemap.xml*
 
+usar o whatweb para identificar tecnologias utilizadas na aplicação -->
+#+begin_src sh
+whatweb http://leakphase.hv
+
+http://leakphase.hv [200 OK] Country[RESERVED][ZZ], Email[hacker@mail.com], HTML5, IP[172.20.34.32], Script, Title[LeakPhase - Home]
+#+end_src
+
+uso do webhttrack para baixar o site completo, e analisar seu codigo fonte, a UI dele ficará disponível na porta 8080 -->
+#+begin_src sh
+webhttrack
+#+end_src
+
+uso do Netcraft, site que faz diversas análises na aplicação -->
+
+https://www.netcraft.com/
+
+* DNS recon
+DNSRecon -->
+
+#+begin_src sh
+dnsrecon -d hackersploit.org
+[*] std: Performing General Enumeration against: hackersploit.org...
+[*] DNSSEC is configured for hackersploit.org
+[*] DNSKEYs:
+[*]     None KSk ECDSAP256SHA256 99db2cc14cabdc33d6d77da63a2f15f7 1112584f234e8d1dc428e39e8a4a97e1 aa271a555dc90701e17e2a4c4b6f120b 7c32d44f4ac02bd894cf2d4be7778a19
+[*]     None ZSK ECDSAP256SHA256 a09311112cf9138818cd2feae970ebbd 4d6a30f6088c25b325a39abbc5cd1197 aa098283e5aaf421177c2aa5d714992a 9957d1bcc18f98cd71f1f1806b65e148
+[*]      SOA dee.ns.cloudflare.com 172.64.32.93
+[*]      SOA dee.ns.cloudflare.com 173.245.58.93
+[*]      SOA dee.ns.cloudflare.com 108.162.192.93
+#+end_src
+
+outra alternativa é utilizar o https://dnsdumpster.com
+
+* WAF detection with wafw00f
+the web application firewall fingerprinting tool
+
+To do its magic, WAFW00F does the following:
+
+- Sends a normal HTTP request and analyses the response; this identifies a number of WAF solutions.
+- If that is not successful, it sends a number of (potentially malicious) HTTP requests and uses simple logic to deduce which WAF it is.
+- If that is also not successful, it analyses the responses previously returned and uses another simple algorithm to guess if a WAF or security solution is actively responding to our attacks.
+
+install with pipx -->
+#+begin_src sh
+pipx install wafw00f
+#+end_src
+
+WAFW00F can detect a number of firewalls, a list of which is as below -->
+#+begin_src sh
+wafw00f google.com -a
+
+                   ______
+                  /      \
+                 (  Woof! )
+                  \  ____/                      )
+                  ,,                           ) (_
+             .-. -    _______                 ( |__|
+            ()``; |==|_______)                .)|__|
+            / ('        /|\                  (  |__|
+        (  /  )        / | \                  . |__|
+         \(_)_))      /  |  \                   |__|
+
+                    ~ WAFW00F : v2.4.1 ~
+    The Web Application Firewall Fingerprinting Toolkit
+#+end_src
+
+* subdomain enumeration with sublist3r
+Sublist3r is a python tool designed to enumerate subdomains of websites using OSINT.
+
+It helps penetration testers and bug hunters collect and gather subdomains for the domain they are targeting
+
+Install com o pipx -->
+#+begin_src sh
+pipx install sublist3r
+#+end_src
+
+#+begin_src sh
+sublist3r -d google.com
+#+end_src
+
+para usar um brute-force com o sublist3r -->
+#+begin_src sh
+sublist3r -d google.com -b
+#+end_src
+
+* google dorks
+- site:ine.com
+- site:ine.com inurl:admin
+- site:ine.com inurl:forum
+- site:*.ine.com
+- site:*.ine.com intitle:admin
+- site:*.ine.com filetype:pdf
+- site:*.ine.com filetype:xml
+- site:*.ine.com filetype:zip
+
+* theHavester
+theHarvester is a simple to use, yet powerful tool designed to be used during the reconnaissance stage of a red team assessment or penetration test
+
+It performs open source intelligence (OSINT) gathering to help determine a domain's external threat landscape
+
+install with brew -->
+#+begin_src sh
+brew install theharvester
+#+end_src
+
+uso do theharvester -->
+#+begin_src sh
+theharvester -d trf1 --source all
+
+19gajus.ba@trf1
+ascom.trf1@trf1
+asgej@trf1
+corregedoria@trf1
+csti@trf1
+
+[*] No people found.
+
+[*] Hosts found: 12
+---------------------
+app.trf1
+ascom.trf1
+emil.trf1
+esosti.trf1
+#+end_src
+
+* leaked password databases
+https://haveibeenpwned.com
+
+verificar emails no site -->

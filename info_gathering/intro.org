@@ -33,3 +33,6 @@ information gathering is typically broken down into two types:
 - discovering open ports on target systems
 - learning about the internal infrastructure of a target/organization
 - enumerating information from target systems
+
+* website Recon & footprinting
+começar buscando pelo *robots.txt* ou *sitemap.xml* e pegando o IP Address do domain 
