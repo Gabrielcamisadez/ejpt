@@ -1,0 +1,19 @@
+#+title: Intro to active information gathering
+#+author: gabriel
+
+* DNS
+domain name system is a protocol that is used to resolve domain names/hostnames to IP addresses
+
+during the early days of the internet, users would have to remember the IP address of the sites that they wanted to visit, DNS resolves this issues by mapping domain names
+
+* DNS Records
+- A --> Resolves hostnames or domain to an IPv4 addresses
+- AAAA --> Resolves a hostname or domain to an IPv6 addresses
+- NS --> Reference to the domain nameserver
+- MX --> Resolves a domain to a mail server
+- CNAME --> Used for domain aliases
+- TXT --> Text record
+- HINFO --> Host information
+- SOA --> Domain authority
+- SRV --> Service Records
+- PTR --> Resolves an IP Address to a hostname
