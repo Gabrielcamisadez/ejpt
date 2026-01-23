@@ -36,5 +36,15 @@ during the early days of the internet, users would have to remember the IP addre
 
 dnsenum realize esta busca de forma automatizada -->
 #+begin_src sh
+dnsenum
+#+end_src
 
+dnsrecon -->
+#+begin_src sh
+dnsrecon
+#+end_src
+
+theharvester -->
+#+begin_src sh
+theharvester
 #+end_src
