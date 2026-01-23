@@ -33,3 +33,8 @@ during the early days of the internet, users would have to remember the IP addre
 - A DNS zone transfer can provide penetration testers with a holistic view of an organization network layout
 
 - Furthermore, in certain cases, internal network addresses may be found on an organization DNS serverb
+
+dnsenum realize esta busca de forma automatizada -->
+#+begin_src sh
+
+#+end_src
