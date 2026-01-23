@@ -17,3 +17,19 @@ during the early days of the internet, users would have to remember the IP addre
 - SOA --> Domain authority
 - SRV --> Service Records
 - PTR --> Resolves an IP Address to a hostname
+
+* DNS Interrogation
+- DNS interrogation is the process of enumerating DNS records for a specific domain
+
+- The objective of DNS interrogation is to probe a DNS server to provide use with DNS records for a specific domain
+
+- This process can provide with important information like the IP address of a domain, subdomains, mail server addresses etc
+
+* DNS zone transfer
+- DNS server admins may want to copy or transfer zone files from one DNS server to another. This process is known as a zone transfer
+
+- If misconfigured and left unsecured, this functionality can be abused by attackers to copy the zone file from the primary DNS server to another DNS server
+
+- A DNS zone transfer can provide penetration testers with a holistic view of an organization network layout
+
+- Furthermore, in certain cases, internal network addresses may be found on an organization DNS server
