@@ -1,0 +1,175 @@
+#+title: Host Discovery
+#+author: gabriel
+
+* host discovery parameters
+** -PS — TCP SYN Ping
+
+Envia pacotes TCP com a flag SYN para portas específicas do alvo.
+
+*** Funcionamento
+
+O Nmap envia um pacote TCP SYN para a(s) porta(s) definida(s)
+
+Respostas possíveis:
+
+SYN/ACK → porta aberta, host ativo
+
+RST → porta fechada, host ativo
+
+Nenhuma resposta → host inativo ou pacote filtrado
+
+*** Características
+
+Simula o início de uma conexão TCP real
+
+Muito eficaz contra hosts que bloqueiam ICMP
+
+Pode ser facilmente detectado por IDS/IPS
+
+Pode indicar se a porta está aberta ou fechada, mas o objetivo principal é detectar o host
+
+*** Uso típico
+
+Ambientes onde portas comuns (80, 443, 22) estão acessíveis
+
+Redes corporativas com firewall permissivo
+
+** -PA — TCP ACK Ping
+
+Envia pacotes TCP com a flag ACK para portas específicas, sem que exista uma conexão estabelecida.
+
+*** Funcionamento
+
+O Nmap envia um pacote TCP ACK
+
+Se o host estiver ativo, ele responde com RST
+
+Nenhuma resposta indica host inativo ou filtragem
+
+*** Características
+
+Não inicia conexão TCP
+
+Muito eficaz contra firewalls stateful
+
+Não fornece informação sobre o estado da porta
+
+Técnica mais furtiva em alguns cenários
+
+*** Uso típico
+
+Ambientes com firewall stateful
+
+Quando SYN e ICMP são bloqueados
+
+** -PE — ICMP Echo Request
+
+Utiliza o tradicional ICMP Echo Request (ping).
+
+*** Funcionamento
+
+Envia ICMP Echo Request
+
+Se o host responder com Echo Reply, ele está ativo
+
+*** Características
+
+Método mais simples e rápido
+
+Altamente confiável em redes abertas
+
+Frequentemente bloqueado por firewalls
+
+*** Uso típico
+
+Redes internas
+
+Ambientes de laboratório
+
+** -PP — ICMP Timestamp Request
+
+Envia pacotes ICMP do tipo Timestamp Request.
+
+*** Funcionamento
+
+Solicita timestamp do sistema alvo
+
+Resposta indica que o host está ativo
+
+*** Características
+
+Menos comum que Echo Request
+
+Pode atravessar firewalls que bloqueiam ping tradicional
+
+Pouco utilizado em ambientes modernos
+
+** -PM — ICMP Address Mask Request
+
+Solicita a máscara de rede do host alvo.
+
+*** Funcionamento
+
+Envia ICMP Address Mask Request
+
+Qualquer resposta indica host ativo
+
+*** Características
+
+Técnica legada
+
+Raramente suportada hoje
+
+Geralmente bloqueada
+
+** -PU — UDP Ping
+
+Envia pacotes UDP para portas específicas.
+
+*** Funcionamento
+
+Envia pacote UDP para a porta indicada
+
+ICMP Port Unreachable indica que o host está ativo
+
+Nenhuma resposta pode indicar host inativo ou filtragem
+
+*** Características
+
+Útil quando TCP é fortemente filtrado
+
+Mais lento e ruidoso
+
+Pode gerar falsos negativos
+
+** -Pn — Sem Host Discovery
+
+Desativa completamente a fase de descoberta de hosts.
+
+*** Funcionamento
+
+O Nmap assume que todos os alvos estão ativos
+
+Inicia diretamente o port scan
+
+*** Características
+
+Ignora qualquer técnica de ping
+
+Útil quando todo tipo de probe é bloqueado
+
+Pode gerar muitos falsos positivos
+
+*** Uso típico
+
+Ambientes altamente restritivos
+
+Auditorias em redes com firewall rígido
+
+
+* fast host discovery techniques
+
+#+begin_src sh
+nmap -sn -PS21,22,25,80,445,3389,8080 -T4 172.16.60.0/24
+#+end_src
+
