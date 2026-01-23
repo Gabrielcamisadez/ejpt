@@ -25,3 +25,7 @@ pegar informações de algum script especifíco -->
 #+begin_src sh
 nmap --script-help=mongodb-databases.nse
 #+end_src
+
+#+begin_src sh
+nmap --script-help=
+#+end_src
