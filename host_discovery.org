@@ -187,3 +187,8 @@ sudo nmap -sS -sV -F --scan-delay 5s 172.27.0.2
 #+begin_src sh
 sudo nmap -sS -sV -F -T1 172.27.0.2
 #+end_src
+
+a opção *--scan-delay* define um delay entre os scans -->
+#+begin_src sh
+sudo nmap -sS -p445,139,1099,3306,22 -vv -sV --scan-delay 10s 172.18.0.2
+#+end_src

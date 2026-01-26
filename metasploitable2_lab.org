@@ -110,3 +110,7 @@ reiniciar o bind9 -->
 * Notas de Troubleshooting
 - O erro ~capset failed~ no Bind9 é resolvido com o uso do flag *--privileged* no Docker.
 - O container precisa do comando */bin/bash* no final do entrypoint para não encerrar o processo imediatamente após subir os serviços do *rc 2*
+
+  
+
+
