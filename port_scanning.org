@@ -92,12 +92,10 @@ sudo nmap -sS --mtu 16 -p 445 172.18.0.2
 ** -D e -S — Decoy e IP Spoofing (Engodo e Falsificação)
 
 Técnicas avançadas para mascarar a identidade do atacante ou testar regras de confiança baseadas em endereços IP (Whitelists).
-
 *** Funcionamento
 
 - *-D (Decoy):* O Nmap envia pacotes de vários endereços IP falsos junto com o seu IP real. O alvo verá conexões vindas de todos eles simultaneamente.
 - *-S (Spoofing):* O Nmap forja o endereço de origem do pacote para ser exatamente o IP de outra máquina.
-
 
 *** Características
 
