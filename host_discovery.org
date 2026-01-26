@@ -169,7 +169,21 @@ Auditorias em redes com firewall rígido
 
 * fast host discovery techniques
 
+
 #+begin_src sh
 nmap -sn -PS21,22,25,80,445,3389,8080 -T4 172.16.60.0/24
 #+end_src
 
+* otimizando nmap scans
+a opção --host-timeout é ótima para acelar o processo de scans em grandes subnets por exemplo, podemos definir para 5s
+#+begin_src sh
+sudo nmap -vv -p 22,80,445 --host-timeout 3s 172.27.0.0/24
+#+end_src
+
+#+begin_src sh
+sudo nmap -sS -sV -F --scan-delay 5s 172.27.0.2
+#+end_src
+
+#+begin_src sh
+sudo nmap -sS -sV -F -T1 172.27.0.2
+#+end_src

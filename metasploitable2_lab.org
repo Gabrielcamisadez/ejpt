@@ -1,0 +1,112 @@
+#+title: Lab de Escaneamento: Metasploitable2 com Docker
+#+author: gabriel
+
+* Configuração do Ambiente
+Criação de rede isolada e subida do container vulnerável com privilégios para garantir que todos os serviços (incluindo DNS) funcionem.
+
+#+begin_src sh
+# 1. Criar rede bridge isolada e anotar o ID gerado pelo comando
+docker network create --driver bridge lab-cybersec
+
+# 2. Subir o container com permissão de kernel para os serviços
+docker run -d --name metasploitable2 \
+  --network lab-cybersec \
+  --privileged \
+  -it tleemcjr/metasploitable2 /bin/bash -c "/etc/init.d/rc 2 && /bin/bash"
+#+end_src
+
+* Verificação de Serviços (Inside the Container)
+Após subir, validar se as portas TCP e UDP estão abertas corretamente.
+#+begin_src sh
+docker exec -it -u 0 metasploitable2 ss -nltp
+# Esperado: portas 21 (FTP), 22 (SSH), 80 (HTTP), 445 (SMB), etc.
+#+end_src
+
+* Reconhecimento de Rede com Nmap
+Escaneamento agressivo para identificar portas abertas e versões de serviços, monitorando a interface bridge no Wireshark.
+
+Interface identificada para o Wireshark: *br-230b404f0465*
+IP do Alvo: *172.27.0.2*
+
+** TCP Stealth Scan & Service Fingerprinting
+Uso do SYN Scan para evitar completar o handshake e identificação de versões.
+#+begin_src sh
+sudo nmap -sS -sV -p- -v 172.27.0.2
+#+end_src
+
+** UDP Scanning
+Identificação de serviços como DNS (Bind9) que costumam ser silenciosos.
+#+begin_src sh
+sudo nmap -sU -p 53,67,161 172.27.0.2
+#+end_src
+
+* Análise de Tráfego (Wireshark)
+Filtros utilizados para isolar o comportamento do scan durante a captura:
+
+- *Filtrar apenas o alvo:*
+  #+begin_example
+  ip.addr == 172.27.0.2
+  #+end_example
+
+- *Identificar SYN-ACK (Porta Aberta):*
+  #+begin_example
+  tcp.flags.syn == 1 && tcp.flags.ack == 1
+  #+end_example
+
+- *Identificar ICMP Unreachable (Porta UDP Fechada):*
+  #+begin_example
+  icmp.type == 3 && icmp.code == 3
+  #+end_example
+
+* Simulação de rede corporativa
+
+criando um srv-db -->
+#+begin_src sh
+docker run -d --name srv-db-corp \
+  --network lab-cybersec --ip 172.27.0.3 \
+  -e MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1 mariadb:10.11
+#+end_src
+
+criando web-server -->
+#+begin_src sh
+docker run -d --name srv-web-corp \
+  --network lab-cybersec --ip 172.27.0.4 \
+  ubuntu/nginx:latest
+#+end_src
+
+configs no bind9 do metasploitable2, que vai simular o DNS server da rede -->
+#+begin_src sh
+vim /etc/bind/named.conf.local
+
+zone "corp.local" {
+    type master;
+    file "/etc/bind/db.corp";
+    allow-transfer { any; };  # Isso permite o AXFR que vamos testar
+};
+#+end_src
+
+#+begin_src sh
+vim /etc/bind/db.corp
+
+$TTL 604800
+@   IN  SOA ns1.corp.local. admin.corp.local. (
+                  3     ; Serial
+             604800     ; Refresh
+              86400     ; Retry
+            2419200     ; Expire
+             604800 )   ; Negative Cache TTL
+;
+@       IN  NS  ns1.corp.local.
+ns1     IN  A   172.27.0.2
+srv-db  IN  A   172.27.0.3
+srv-web IN  A   172.27.0.4
+#+end_src
+
+reiniciar o bind9 -->
+#+begin_src sh
+/etc/init.d/bind9 restart
+#+end_src
+
+* Notas de Troubleshooting
+- O erro ~capset failed~ no Bind9 é resolvido com o uso do flag *--privileged* no Docker.
+- O container precisa do comando */bin/bash* no final do entrypoint para não encerrar o processo imediatamente após subir os serviços do *rc 2*
