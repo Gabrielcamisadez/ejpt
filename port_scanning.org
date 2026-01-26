@@ -89,7 +89,45 @@ sudo nmap -sS --mtu 16 -p 445 172.18.0.2
 
 **Nota:** Para usar fragmentação, você deve obrigatoriamente usar um scan do tipo Raw (como ~-sS~ ou ~-sU~) e ter privilégios de root.
 
+** -D e -S — Decoy e IP Spoofing (Engodo e Falsificação)
+
+Técnicas avançadas para mascarar a identidade do atacante ou testar regras de confiança baseadas em endereços IP (Whitelists).
+
+*** Funcionamento
+
+- *-D (Decoy):* O Nmap envia pacotes de vários endereços IP falsos junto com o seu IP real. O alvo verá conexões vindas de todos eles simultaneamente.
+- *-S (Spoofing):* O Nmap forja o endereço de origem do pacote para ser exatamente o IP de outra máquina.
+
+
+
+*** Características
+
+- *Decoy (-D):* - Oculta o seu IP real entre "iscas". 
+  - Difulta muito o trabalho do analista de SOC para identificar quem é o verdadeiro atacante.
+  - O parâmetro ~ME~ define a posição do seu IP real na lista de iscas.
+  - O parâmetro ~RND:[num]~ gera IPs aleatórios.
+
+- *Spoofing (-S):* - Permite "atravessar" firewalls que permitem acesso apenas para IPs específicos (Whitelists).
+  - *Limitação:* Você não receberá as respostas (SYN/ACK) de volta, pois elas serão enviadas para o IP falsificado. 
+  - Útil para ataques de negação de serviço ou para validar se uma porta está aberta através de análise no Wireshark (vendo o alvo responder ao IP clonado).
+
+*** Uso típico
+
+- *Evasão de Whitelist:* Testar se a porta 445 abre quando o pacote finge vir do IP do servidor de backup.
+- *Ofuscação de Logs:* Gerar centenas de logs falsos para que o administrador não saiba qual IP bloquear.
+
+#+begin_src sh
+# Decoy Scan: Mistura seu IP com o do admin e outros aleatórios
+sudo nmap -Pn -D 172.18.0.4,RND:5,ME 172.18.0.2
+
+# IP Spoofing: Fingindo ser o Admin (172.18.0.4)
+# Requer definir a interface (-e) e desativar ping (-Pn)
+sudo nmap -Pn -sS -S 172.18.0.4 -e br-7de74f87b4e9 172.18.0.2
+#+end_src
+
+**Nota:** No Spoofing, para saber se a porta está aberta, você deve monitorar o tráfego com o Wireshark e procurar por respostas do alvo destinadas ao IP que você falsificou.
 ** -sC — Default Script Scan
+
 
 Equivale a ~--script=default~. Roda scripts seguros e úteis para enumeração.
 *** Exemplos comuns de uso
