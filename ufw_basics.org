@@ -1,0 +1,95 @@
+#+title: Ufw Basics
+#+author:gabriel
+
+* intro
+uso básico do UFW para filtragem de tráfego
+
+#+TITLE: Guia Mestre de Firewall UFW (InfoSec & Lab)
+#+AUTHOR: Gabriel
+#+DESCRIPTION: Documentação técnica para configuração, evasão e hardening de firewalls UFW.
+#+STARTUP: showall
+
+* 🛡️ GESTÃO DE SERVIÇO E STATUS
+Comandos básicos para administrar o motor do firewall no sistema.
+
+#+begin_src sh
+sudo ufw enable                          # Ativa o firewall (persiste após reboot)
+sudo ufw disable                         # Desativa o firewall
+sudo ufw status verbose                  # Status completo (regras + políticas padrão)
+sudo ufw status numbered                 # Lista regras com IDs (necessário para deletar)
+sudo ufw reload                          # Recarrega configurações sem queda de conexão
+sudo ufw reset                           # Reseta o firewall para o padrão de fábrica
+#+end_src
+
+* ⚙️ POLÍTICAS PADRÃO (HARDENING)
+O conceito de "Default Deny" para garantir que nada passe sem permissão.
+
+#+begin_src sh
+sudo ufw default deny incoming           # Bloqueia qualquer tentativa de entrada (DROP)
+sudo ufw default allow outgoing          # Permite que o servidor faça conexões externas
+sudo ufw default deny routed             # Bloqueia tráfego de passagem (forwarding)
+#+end_src
+
+* 🌐 REGRAS POR PORTA E PROTOCOLO
+Configurações para serviços públicos e controle de portas específicas.
+
+#+begin_src sh
+sudo ufw allow 80/tcp                    # Web (HTTP)
+sudo ufw allow 443/tcp                   # Web Seguro (HTTPS)
+sudo ufw allow 53/udp                    # DNS (UDP)
+sudo ufw deny 21/tcp                     # Bloqueio explícito de FTP (Gera 'Filtered')
+sudo ufw reject 23/tcp                   # Rejeita Telnet (Envia resposta ICMP de erro)
+sudo ufw allow 1000:2000/tcp             # Abre range de portas (1000 a 2000)
+#+end_src
+
+* 🏢 REGRAS DE ORIGEM E WHITELISTS
+Simulação de acessos restritos de administradores ou redes internas.
+
+#+begin_src sh
+# IP Único (Máquina do Administrador)
+sudo ufw allow from 172.18.0.4
+
+# Porta SSH restrita apenas para a sub-rede do laboratório
+sudo ufw allow from 172.18.0.0/24 to any port 22 proto tcp
+
+# SMB/Samba liberado apenas para um IP específico
+sudo ufw allow from 172.18.0.3 to any port 445 proto tcp
+
+# Blacklist (Bloqueio imediato de IP intruso)
+sudo ufw deny from 192.168.1.66
+#+end_src
+
+* 🛠️ MANIPULAÇÃO AVANÇADA E ORDEM
+O UFW lê as regras de cima para baixo. A ordem define a eficácia.
+
+#+begin_src sh
+# Inserir regra no TOPO (Garante que o bloqueio venha antes de um ALLOW genérico)
+sudo ufw insert 1 deny from 172.18.0.10
+
+# Deletar regra pelo número de ID (use 'status numbered' primeiro)
+sudo ufw delete [ID]
+
+# Anti-Brute Force (Rate Limiting)
+# Bloqueia IPs que tentam >6 conexões em 30 segundos
+sudo ufw limit 22/tcp
+
+# Adicionar comentário para auditoria no estágio
+sudo ufw allow 80/tcp comment 'Permitir Web Server Principal'
+#+end_src
+
+* 🔬 ANÁLISE PENTEST (NMAP VS UFW)
+Referência rápida para identificar o comportamento do firewall durante um scan.
+
+| Regra Aplicada | Status Nmap | Motivo (Reason) | Comportamento Wireshark       |
+|----------------+-------------+----------------+-------------------------------|
+| Allow          | open        | syn-ack        | Recebe SYN, responde SYN-ACK  |
+| Deny           | filtered    | no-response    | DROP (Silêncio total)         |
+| Reject         | filtered    | admin-prohib   | Responde ICMP Unreachable     |
+| Default Deny   | filtered    | no-response    | Política de DROP ativada      |
+
+* 📝 LOGS E MONITORAMENTO
+#+begin_src sh
+sudo ufw logging on                      # Ativa os logs
+sudo ufw logging low|medium|high         # Define o nível de detalhamento
+tail -f /var/log/ufw.log                 # Monitoramento de pacotes em tempo real
+#+end_src

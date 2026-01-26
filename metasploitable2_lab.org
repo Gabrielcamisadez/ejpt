@@ -92,7 +92,9 @@ $TTL 604800
 @   IN  SOA ns1.corp.local. admin.corp.local. (
                   3     ; Serial
              604800     ; Refresh
-              86400     ; Retry
+              86400     ; Retry#+begin_src sh
+sudo nmap -sS -sV -F --scan-delay 5s 172.27.0.2
+#+end_src
             2419200     ; Expire
              604800 )   ; Negative Cache TTL
 ;
