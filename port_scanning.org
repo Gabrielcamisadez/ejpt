@@ -58,7 +58,39 @@ Ativa várias opções de uma vez para reconhecimento rápido.
 *** Características
 - Extremamente barulhento. Use apenas se a furtividade não for uma prioridade.
 
+** -f e --mtu — Fragmentação de Pacotes
+
+Técnica de evasão que consiste em dividir os cabeçalhos TCP/IP em pedaços menores para confundir Firewalls e Sistemas de Detecção de Intrusão (IDS).
+
+*** Funcionamento
+
+- *-f:* O Nmap divide o cabeçalho em fragmentos de 8 bytes após o cabeçalho IP.
+- *-ff:* Divide em fragmentos ainda menores (16 bytes), aumentando a dificuldade de remontagem para o IDS.
+- *--mtu [valor]:* Permite definir o tamanho exato da unidade máxima de transmissão (deve ser múltiplo de 8).
+  
+*** Características
+
+- *Bypass de IDS:* Muitos IDSs antigos ou mal configurados não conseguem remontar todos os fragmentos para analisar a assinatura do ataque antes que eles cheguem ao alvo.
+- *Bypass de Firewall:* Alguns firewalls aplicam regras apenas ao primeiro fragmento (que contém as portas), permitindo que os subsequentes passem sem inspeção.
+- *Fragilidade:* Kernels modernos e firewalls stateful (como o UFW/iptables com conexões estabelecidas) costumam remontar os pacotes antes da análise, o que pode invalidar a técnica.
+
+*** Uso típico
+
+- *Evasão de assinaturas:* Quando você sabe que há um sensor de rede monitorando por pacotes SYN "padrão".
+- *Ambientes Legados:* Muito eficaz contra roteadores e firewalls antigos que não possuem inspeção profunda de pacotes (DPI).
+
+#+begin_src sh
+# Fragmentação padrão (8 bytes)
+sudo nmap -sS -f -p 21,22,80 172.18.0.2
+
+# Fragmentação personalizada com MTU de 16 bytes
+sudo nmap -sS --mtu 16 -p 445 172.18.0.2
+#+end_src
+
+**Nota:** Para usar fragmentação, você deve obrigatoriamente usar um scan do tipo Raw (como ~-sS~ ou ~-sU~) e ter privilégios de root.
+
 ** -sC — Default Script Scan
+
 Equivale a ~--script=default~. Roda scripts seguros e úteis para enumeração.
 *** Exemplos comuns de uso
 - Identificar banners, chaves SSH, títulos de páginas web e domínios SMB.
@@ -112,37 +144,6 @@ sudo nmap -sS -p 22,80,445 --scan-delay 10s --max-retries 1 172.18.0.2
 sudo nmap -F -T4 --host-timeout 30s 172.18.0.0/24
 #+end_src
 
-
-** -f e --mtu — Fragmentação de Pacotes
-
-Técnica de evasão que consiste em dividir os cabeçalhos TCP/IP em pedaços menores para confundir Firewalls e Sistemas de Detecção de Intrusão (IDS).
-
-*** Funcionamento
-
-- *-f:* O Nmap divide o cabeçalho em fragmentos de 8 bytes após o cabeçalho IP.
-- *-ff:* Divide em fragmentos ainda menores (16 bytes), aumentando a dificuldade de remontagem para o IDS.
-- *--mtu [valor]:* Permite definir o tamanho exato da unidade máxima de transmissão (deve ser múltiplo de 8).
-  
-*** Características
-
-- *Bypass de IDS:* Muitos IDSs antigos ou mal configurados não conseguem remontar todos os fragmentos para analisar a assinatura do ataque antes que eles cheguem ao alvo.
-- *Bypass de Firewall:* Alguns firewalls aplicam regras apenas ao primeiro fragmento (que contém as portas), permitindo que os subsequentes passem sem inspeção.
-- *Fragilidade:* Kernels modernos e firewalls stateful (como o UFW/iptables com conexões estabelecidas) costumam remontar os pacotes antes da análise, o que pode invalidar a técnica.
-
-*** Uso típico
-
-- *Evasão de assinaturas:* Quando você sabe que há um sensor de rede monitorando por pacotes SYN "padrão".
-- *Ambientes Legados:* Muito eficaz contra roteadores e firewalls antigos que não possuem inspeção profunda de pacotes (DPI).
-
-#+begin_src sh
-# Fragmentação padrão (8 bytes)
-sudo nmap -sS -f -p 21,22,80 172.18.0.2
-
-# Fragmentação personalizada com MTU de 16 bytes
-sudo nmap -sS --mtu 16 -p 445 172.18.0.2
-#+end_src
-
-**Nota:** Para usar fragmentação, você deve obrigatoriamente usar um scan do tipo Raw (como ~-sS~ ou ~-sU~) e ter privilégios de root.
 
 * useful output formats
 Guardar os resultados de forma organizada para relatórios e ferramentas.
