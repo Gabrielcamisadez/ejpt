@@ -99,7 +99,6 @@ Técnicas avançadas para mascarar a identidade do atacante ou testar regras de 
 - *-S (Spoofing):* O Nmap forja o endereço de origem do pacote para ser exatamente o IP de outra máquina.
 
 
-
 *** Características
 
 - *Decoy (-D):* - Oculta o seu IP real entre "iscas". 
