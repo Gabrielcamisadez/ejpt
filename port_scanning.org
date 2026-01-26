@@ -1,0 +1,138 @@
+#+title: Port Scanning & Enumeration
+#+author: gabriel
+
+* port scanning techniques
+As técnicas de scan definem como o Nmap interage com as portas abertas/fechadas do alvo após a descoberta do host.
+
+** -sS — TCP SYN Scan (Stealth Scan)
+É o padrão (se houver privilégio de root) e o mais popular.
+*** Funcionamento
+- Envia SYN → Recebe SYN/ACK → Envia RST (Não completa o handshake).
+- Se receber RST, a porta está fechada.
+*** Características
+- Rápido: Escaneia milhares de portas por segundo em redes rápidas.
+- Furtivo: Como não completa a conexão TCP, muitos logs de aplicação não registram o acesso.
+- Eficaz: Diferencia bem entre Open, Closed e Filtered.
+
+** -sT — TCP Connect Scan
+O padrão quando o usuário não tem privilégios administrativos.
+*** Funcionamento
+- Completa o "Three-way Handshake" (SYN -> SYN/ACK -> ACK).
+*** Características
+- Barulhento: Deixa rastros claros nos logs dos serviços (ex: logs do Apache/Nginx).
+- Lento: Leva mais tempo e utiliza mais recursos do que o SYN scan.
+
+** -sU — UDP Scan
+Escaneia serviços que utilizam o protocolo UDP.
+*** Funcionamento
+- Envia pacote UDP para a porta.
+- Nenhuma resposta → Open|Filtered.
+- ICMP Port Unreachable (Type 3, Code 3) → Closed.
+- Resposta UDP → Open.
+*** Características
+- Extremamente lento devido aos limites de taxa (rate-limit) do ICMP nos kernels.
+- Crucial para encontrar DNS (53), SNMP (161), DHCP e serviços de VPN.
+
+** -sV — Service Version Detection
+Interroga as portas abertas para determinar exatamente o que está rodando.
+*** Funcionamento
+- Após o port scan, o Nmap envia "probes" específicos para os serviços.
+- Analisa os "banners" e respostas para identificar versão e SO.
+*** Características
+- Essencial para busca de exploits (ex: saber se é Apache 2.2.22 ou 2.4.50).
+- Intensidade: Pode ser ajustada de 0 a 9 com ~--version-intensity~.
+
+* advanced evasion & fingerprinting
+Técnicas para obter informações mais profundas ou burlar filtros.
+
+** -O — OS Detection
+Tenta identificar o Sistema Operacional através da análise de pacotes TCP/IP.
+*** Características
+- Analisa opções do TCP, tamanho da janela, TTL e sequência de números.
+- Requer pelo menos uma porta aberta e uma fechada para ser preciso.
+
+** -A — Aggressive Scan
+Ativa várias opções de uma vez para reconhecimento rápido.
+*** O que inclui
+- ~-sV~ (Versão), ~-O~ (SO), ~-sC~ (Scripts padrão) e ~--traceroute~.
+*** Características
+- Extremamente barulhento. Use apenas se a furtividade não for uma prioridade.
+
+** -sC — Default Script Scan
+Equivale a ~--script=default~. Roda scripts seguros e úteis para enumeração.
+*** Exemplos comuns de uso
+- Identificar banners, chaves SSH, títulos de páginas web e domínios SMB.
+
+* performance & optimization
+Ajustes para ganhar tempo e precisão em diferentes infraestruturas.
+
+** timing templates (-T)
+- *-T0 (Paranoid):* Serializado, espera 5 min entre pacotes. Para fugir de IDSs.
+- *-T1 (Sneaky):* Muito lento, para scans de longa duração.
+- *-T2 (Polite):* Consome menos largura de banda, 10x mais lento que o T3.
+- *-T3 (Normal):* O padrão do Nmap.
+- *-T4 (Aggressive):* O ideal para CTFs e Redes Locais. Assume rede estável.
+- *-T5 (Insane):* Extremamente rápido. Pode perder pacotes ou derrubar serviços.
+
+** parallelism & rate limiting
+Controle fino da carga enviada à rede.
+#+begin_src sh
+--min-parallelism [num] # Define o mínimo de operações simultâneas.
+--max-rate [pacotes/s]  # Limita a taxa de envio (excelente para evitar crash em serviços).
+--min-rate [pacotes/s]  # Garante uma velocidade mínima de scan.
+#+end_src
+
+** --host-timeout e --scan-delay — Evasão e Estabilidade
+
+Parâmetros críticos para manipular o tempo do scan, permitindo burlar sistemas de detecção (IDS) ou evitar sobrecarga em dispositivos sensíveis.
+
+*** Funcionamento
+
+- *--host-timeout:* Define o tempo máximo que o Nmap dedicará a um único alvo antes de desistir dele.
+- *--scan-delay:* Insere uma pausa obrigatória entre cada probe (pacote) enviado.
+
+
+
+*** Características
+
+- *Evasão de IDS/IPS:* O --scan-delay é uma das técnicas mais eficazes para passar por sistemas que bloqueiam IPs baseados em "muitos pacotes em pouco tempo" (Threshold).
+- *Performance em Redes Lentas:* O --host-timeout evita que o scan fique "travado" em um único host que está respondendo muito lentamente ou que possui um firewall que causa timeouts propositais.
+- *Furtividade:* Aumentar o delay torna o scan quase imperceptível em análises de tráfego, pois os pacotes se misturam ao ruído normal da rede.
+
+*** Uso típico
+
+- *Redes com IPS ativo:* Usar ~--scan-delay 5s~ ou maior para não disparar alertas de port scanning.
+- *Scans em larga escala:* Usar ~--host-timeout 3m~ em uma sub-rede /24 para garantir que hosts problemáticos não atrasem o mapeamento de toda a rede.
+
+#+begin_src sh
+# Exemplo de scan ultra furtivo para evasão de IDS
+sudo nmap -sS -p 22,80,445 --scan-delay 10s --max-retries 1 172.18.0.2
+
+# Exemplo de otimização para redes grandes e instáveis
+sudo nmap -F -T4 --host-timeout 30s 172.18.0.0/24
+#+end_src
+
+
+
+* useful output formats
+Guardar os resultados de forma organizada para relatórios e ferramentas.
+
+#+begin_src sh
+-oN scan.txt    # Normal: O formato que vemos no terminal.
+-oG scan.gnmap  # Grepable: Fácil de manipular com grep/awk/cut.
+-oX scan.xml    # XML: Para importar no Zenmap, Metasploit ou Ivy.
+-oA full_output # Salva nos três formatos acima de uma só vez.
+#+end_src
+
+* practical examples for lab
+#+begin_src sh
+# Scan rápido de todas as portas (Full Scan) com T4
+sudo nmap -sS -p- -T4 172.18.0.2
+
+# Enumeração profunda de um alvo específico descoberto
+sudo nmap -sS -sV -sC -O -p 22,80,445 172.18.0.2
+
+# Scan UDP focado em serviços comuns
+sudo nmap -sU -F -T4 172.18.0.2
+#+end_src
+
