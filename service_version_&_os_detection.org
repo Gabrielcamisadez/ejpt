@@ -7,7 +7,6 @@
 nmap -sS -sV -p- 192.31.214.3
 #+end_src
 
-
 #+begin_src sh
 nmap -T4 -sS -sV --version-intensity 8 -O --osscan-guess -p- 192.31.214.3
 #+end_src
@@ -19,7 +18,6 @@ busca por scripts com foco HTTP -->
 #+begin_src sh
 ls -al /usr/share/nmap/scripts | grep -e "http"
 #+end_src
-
 
 pegar informações de algum script especifíco -->
 #+begin_src sh
