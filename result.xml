@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.94SVN scan initiated Mon Jan 26 21:44:13 2026 as: nmap -sV -sS -sC -p445 -vv -oX result 172.27.0.4 -->
+<nmaprun scanner="nmap" args="nmap -sV -sS -sC -p445 -vv -oX result 172.27.0.4" start="1769474653" startstr="Mon Jan 26 21:44:13 2026" version="7.94SVN" xmloutputversion="1.05">
+<scaninfo type="syn" protocol="tcp" numservices="1" services="445"/>
+<verbose level="2"/>
+<debugging level="0"/>
+<taskbegin task="NSE" time="1769474654"/>
+<taskend task="NSE" time="1769474654"/>
+<taskbegin task="NSE" time="1769474654"/>
+<taskend task="NSE" time="1769474654"/>
+<taskbegin task="NSE" time="1769474654"/>
+<taskend task="NSE" time="1769474654"/>
+<taskbegin task="ARP Ping Scan" time="1769474654"/>
+<hosthint><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="172.27.0.4" addrtype="ipv4"/>
+<address addr="8E:1D:11:2F:41:C4" addrtype="mac"/>
+<hostnames>
+</hostnames>
+</hosthint>
+<taskend task="ARP Ping Scan" time="1769474654" extrainfo="1 total hosts"/>
+<taskbegin task="Parallel DNS resolution of 1 host." time="1769474654"/>
+<taskend task="Parallel DNS resolution of 1 host." time="1769474654"/>
+<taskbegin task="SYN Stealth Scan" time="1769474654"/>
+<taskend task="SYN Stealth Scan" time="1769474654" extrainfo="1 total ports"/>
+<taskbegin task="Service scan" time="1769474654"/>
+<taskbegin task="NSE" time="1769474654"/>
+<taskend task="NSE" time="1769474659"/>
+<taskbegin task="NSE" time="1769474659"/>
+<taskend task="NSE" time="1769474659"/>
+<taskbegin task="NSE" time="1769474659"/>
+<taskend task="NSE" time="1769474659"/>
+<host starttime="1769474654" endtime="1769474659"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="172.27.0.4" addrtype="ipv4"/>
+<address addr="8E:1D:11:2F:41:C4" addrtype="mac"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="445"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="microsoft-ds" method="table" conf="3"/></port>
+</ports>
+<times srtt="38" rttvar="5000" to="100000"/>
+</host>
+<taskbegin task="NSE" time="1769474659"/>
+<taskend task="NSE" time="1769474659"/>
+<taskbegin task="NSE" time="1769474659"/>
+<taskend task="NSE" time="1769474659"/>
+<taskbegin task="NSE" time="1769474659"/>
+<taskend task="NSE" time="1769474659"/>
+<runstats><finished time="1769474659" timestr="Mon Jan 26 21:44:19 2026" summary="Nmap done at Mon Jan 26 21:44:19 2026; 1 IP address (1 host up) scanned in 5.72 seconds" elapsed="5.72" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>
