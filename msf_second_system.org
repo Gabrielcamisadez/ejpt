@@ -27,6 +27,7 @@ agora no workspace atual está salvo as informações obtidas com o Scan, pode-s
 
 após verificar a aplicação rodando na porta 80, é uma aplicação com uma vuln conhecida, a aplicação xoda possui uma CVE antiga de file upload, onde é possível obter um webshell
 
+
 basta ajustar os params do msf, como TARGETURI, PORT e LHOST corretamente .
 
 após obter o webshell, é possível verificar que o sistema está ligado em outra interface, podendo obter conectividade com outros hosts
