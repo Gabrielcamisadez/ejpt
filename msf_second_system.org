@@ -1,0 +1,32 @@
+#+title: Msf Second System
+#+author: gabriel
+
+* lab
+após encontrar a aplicação rodando na porta 80 com o nmap -->
+#+begin_src sh
+sudo nmap -Pn -sS -p- demo1.ine.local -oX result.xml
+#+end_src
+
+
+ligar o postgres no kali para o msfconsole -->
+#+begin_src sh
+service postgresql start
+#+end_src
+
+msfconsole -->
+#+begin_src sh
+msfconsole
+#+end_src
+
+importar o xml no msf -->
+#+begin_src sh
+db_import result.xml
+#+end_src
+
+agora no workspace atual está salvo as informações obtidas com o Scan, pode-se conferir com os comandos hosts, services, vulns.
+
+após verificar a aplicação rodando na porta 80, é uma aplicação com uma vuln conhecida, a aplicação xoda possui uma CVE antiga de file upload, onde é possível obter um webshell
+
+basta ajustar os params do msf, como TARGETURI, PORT e LHOST corretamente .
+
+após obter o webshell, é possível verificar que o sistema está ligado em outra interface, podendo obter conectividade com outros hosts
