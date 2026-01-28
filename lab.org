@@ -1,0 +1,75 @@
+#+TITLE: Lab de Infraestrutura e Defesa: Orquestração Docker e Hardening com UFW
+#+AUTHOR: Gabriel
+#+DESCRIPTION: Lab focado em montagem de rede isolada, serviços de infra (DNS/DB) e defesa com Firewall.
+
+* Cenário do Laboratório
+O objetivo deste lab é simular uma rede corporativa composta por três nós principais em uma rede bridge isolada. O foco está na configuração correta dos serviços e na implementação de regras de firewall para impedir a movimentação lateral entre containers.
+
+** Topologia da Rede (172.27.0.0/24)
+- *Metasploitable2 (172.27.0.2):* Servidor de Infra (DNS/Bind9, FTP, SSH).
+- *SRV-DB-CORP (172.27.0.3):* Banco de dados MariaDB (Produção).
+- *SRV-WEB-CORP (172.27.0.4):* Servidor Web Nginx.
+
+* 1. Orquestração e Montagem
+A montagem utiliza privilégios de kernel para garantir que o Bind9 e outros serviços legados funcionem corretamente dentro do ambiente Docker.
+
+#+begin_src sh
+# Criando a rede bridge isolada
+docker network create --driver bridge --subnet 172.27.0.0/24 lab-cybersec
+
+# Subindo o nó de infraestrutura (Alvo de entrada)
+docker run -d --name metasploitable2 \
+  --network lab-cybersec --ip 172.27.0.2 \
+  --privileged -it tleemcjr/metasploitable2 \
+  /bin/bash -c "/etc/init.d/rc 2 && /bin/bash"
+
+# Subindo servidores de "Produção"
+docker run -d --name srv-db-corp --network lab-cybersec --ip 172.27.0.3 \
+  -e MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1 mariadb:10.11
+
+docker run -d --name srv-web-corp --network lab-cybersec --ip 172.27.0.4 \
+  ubuntu/nginx:latest
+#+end_src
+
+* 2. Configuração de DNS (Shadow IT / Infra)
+Simulação de uma zona DNS interna no Metasploitable2 para mapear os ativos da rede.
+
+#+begin_src sh
+# Configurando a zona corp.local no Bind9
+docker exec -it metasploitable2 vim /etc/bind/db.corp
+
+# Detalhe do arquivo de zona:
+# ns1     IN  A   172.27.0.2
+# srv-db  IN  A   172.27.0.3
+# srv-web IN  A   172.27.0.4
+#+end_src
+
+* 3. Implementação de Defesa com UFW
+Como o Metasploitable2 é intencionalmente vulnerável, usamos o **UFW (Uncomplicated Firewall)** no Host para restringir o que ele pode acessar dentro da rede `lab-cybersec`.
+
+
+
+#+begin_src sh
+# 1. Bloquear qualquer tráfego vindo do nó vulnerável para o Banco de Dados
+sudo ufw deny from 172.27.0.2 to 172.27.0.3
+
+# 2. Permitir que apenas o Web Server acesse o Banco de Dados (Porta 3306)
+sudo ufw allow from 172.27.0.4 to 172.27.0.3 port 3306 proto tcp
+
+# 3. Permitir acesso HTTP externo apenas para o Web Server
+sudo ufw allow to 172.27.0.4 port 80 proto tcp
+#+end_src
+
+* 4. Validação e Troubleshooting
+- **Verificação de Escopo:** O uso do ~--privileged~ resolveu o erro de ~capset failed~ no Bind9.
+- **Teste de Firewall:** Tentar um `nmap` ou `telnet` do container metasploitable para o srv-db deve resultar em timeout, validando a regra do UFW.
+
+#+begin_src zsh
+# Testando a barreira defensiva a partir do host
+sudo nmap -Pn -p 3306 172.27.0.3
+#+end_src
+
+* Notas de Engenharia
+- A persistência dos IPs fixos permite que as regras de firewall sejam granulares.
+- O laboratório demonstra que, mesmo com serviços vulneráveis na rede, a segmentação (Micro-segmentação) via software pode impedir o sucesso de um ataque de movimentação lateral.
+
