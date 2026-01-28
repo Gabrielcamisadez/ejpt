@@ -1,29 +1,60 @@
-#+title: Service Version Os Detection
-#+author: gabriel
+#+title: 🔍 Service Version & OS Detection
+#+author: Gabriel
+#+options: num:nil toc:t
 
-* Service Version Os Detection
+* 🛠️ Service Version & OS Detection
+A detecção de serviços e do Sistema Operacional (SO) é o passo fundamental para identificar a superfície de ataque exata e cruzar versões com vulnerabilidades conhecidas (CVEs).
+
+** 📡 Escaneamento de Versão (-sV)
+O Nmap interage com as portas abertas enviando /probes/ para determinar o que realmente está rodando, indo além do simples mapeamento de portas.
 
 #+begin_src sh
-nmap -sS -sV -p- 192.31.214.3
+# -sS: TCP SYN Scan (furtivo)
+# -sV: Tenta determinar a versão do serviço
+# -p-: Escaneia todas as 65.535 portas
+nmap -sS -sV -p- 10.10.62.4
 #+end_src
 
+** 🐧 Detecção Agressiva de SO (-O)
+O Nmap analisa as respostas do stack TCP/IP (como o TTL e o tamanho da janela) para realizar o fingerprinting do sistema operacional.
+
 #+begin_src sh
+# -T4: Timing agressivo (ideal para ambientes de lab)
+# -O: Ativa a detecção de SO
+# --osscan-guess: Tenta adivinhar o SO se não houver 100% de certeza
 nmap -T4 -sS -sV --version-intensity 8 -O --osscan-guess -p- 192.31.214.3
 #+end_src
 
-a opção *--version-intensity* define o quão agressivo será o nmap na detecção de serviços.
 
-* nmap NSE
-busca por scripts com foco HTTP -->
+** ⚡ Parâmetros de Intensidade
+A opção =--version-intensity= define o quão persistente o Nmap será na identificação.
+- *Escala:* 0 a 9.
+- *Teoria:* Níveis mais altos testam mais /probes/, sendo mais precisos para serviços em portas "mentirosas" ou não convencionais.
+
+* 📜 Nmap Scripting Engine (NSE)
+O NSE permite que você use scripts Lua para automatizar tarefas de segurança, desde brute-force até detecção de vulnerabilidades críticas.
+
+** 🔍 Buscando Scripts (Foco HTTP)
+No seu **Debian/Zsh**, você pode filtrar os scripts disponíveis no diretório padrão:
+
 #+begin_src sh
+# Lista scripts e filtra por palavras-chave (ex: http)
 ls -al /usr/share/nmap/scripts | grep -e "http"
 #+end_src
 
-pegar informações de algum script especifíco -->
-#+begin_src sh
-nmap --script-help=mongodb-databases.nse
-#+end_src
+** 📖 Documentação e Help
+Sempre valide o comportamento de um script antes de executá-lo para evitar causar instabilidade no alvo.
 
 #+begin_src sh
-nmap --script-help=
+# Pega informações e descrição de um script específico
+nmap --script-help=mongodb-databases.nse
+
+# Exemplo de help genérico
+nmap --script-help=banner.nse
+#+end_src
+
+** 🚀 Exemplo Prático: Vulnerability Scan
+#+begin_src sh
+# Executa scripts da categoria 'vuln' para checar falhas conhecidas no alvo
+nmap --script vuln 172.16.5.35
 #+end_src
