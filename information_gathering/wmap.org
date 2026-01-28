@@ -1,0 +1,91 @@
+#+TITLE: 🛡️ Guia de Uso: WMAP no Metasploit Framework
+#+AUTHOR: Gabriel (Software Engineering & CyberSec)
+#+DATE: [2026-01-28]
+#+STARTUP: showeverything
+
+* 🌐 Introdução ao WMAP
+O WMAP é um plugin de scanner de vulnerabilidades web integrado ao *Metasploit*. Ele automatiza a execução de diversos módulos auxiliares para identificar falhas comuns.
+
+** 🎯 Vetores de Ataque Identificados:
+- 💉 *SQL Injection*
+- ⚔️ *Cross-Site Scripting (XSS)*
+- 📂 *Directory Traversal*
+- 📄 *File Inclusion*
+
+---
+
+* ⚙️ Configuração do Ambiente
+Antes de iniciar, o banco de dados *PostgreSQL* deve estar ativo.
+
+#+begin_src bash
+# 🐘 Iniciar banco de dados e Metasploit
+sudo msfdb init && msfconsole
+
+# 🔌 Dentro do msfconsole, carregar o plugin
+load wmap
+#+end_src
+
+---
+
+* 🚀 Workflow de Execução
+
+** 1. 📍 Adicionar Site Alvo
+O "site" define a raiz do host (IP ou Domínio).
+#+begin_src bash
+wmap_sites -a http://172.17.0.2  # Exemplo: Seu container PHP/Docker
+wmap_sites -l                   # 📋 Listar sites configurados
+#+end_src
+
+** 2. 🎯 Definir o Target (URL)
+O "target" vincula o site a um ID específico para o scan.
+#+begin_src bash
+wmap_targets -d 0               # 🔗 Define o site de ID 0 como alvo
+wmap_targets -l                 # ✅ Verifica se o alvo foi selecionado (Y)
+#+end_src
+
+** 3. 🔍 Seleção e Teste de Módulos
+Verifica quais módulos do MSF são compatíveis com o servidor web detectado.
+#+begin_src bash
+wmap_run -t                     # 🧪 Modo teste: lista o que será executado
+#+end_src
+
+** 4. ⚡ Execução do Scan
+Inicia a varredura ativa contra o alvo.
+#+begin_src bash
+wmap_run -e                     # 🧨 Executa todos os módulos selecionados
+#+end_src
+
+---
+
+* 📊 Gerenciamento de Resultados
+Os achados são armazenados automaticamente no banco de dados do framework.
+
+#+begin_src bash
+wmap_vulns -l                   # 🚩 Lista vulnerabilidades encontradas pelo WMAP
+vulns                           # 📝 Comando nativo do MSF para visão geral
+#+end_src
+
+---
+
+* 💡 Dicas para o Laboratório (Doom Emacs)
+- 🖥️ **Terminal**: Use o =vterm= dentro do Emacs para uma experiência de terminal mais fluida com o MSF.
+- 🔗 **Burp Suite**: Se estiver interceptando o tráfego no Burp, configure o proxy global no MSF:
+  #+begin_src bash
+  setg Proxies HTTP:127.0.0.1:8080
+  #+end_src
+- ⚡ **Babel**: Você pode executar os comandos acima diretamente com ~C-c C-c~ se o seu ~ob-shell~ estiver configurado.
+
+---
+
+* 📜 Tabela de Referência Rápida
+| Ícone | Comando             | Descrição                                  |
+|-------+---------------------+--------------------------------------------|
+| ➕    | wmap_sites -a [URL] | Adiciona novo site                         |
+| 🎯    | wmap_targets -d ID  | Define o alvo pelo ID                       |
+| 🧪    | wmap_run -t         | Lista módulos compatíveis                  |
+| 🚀    | wmap_run -e         | Inicia o scan completo                     |
+| 🚩    | wmap_vulns -l       | Exibe vulnerabilidades                     |
+| 🧹    | wmap_targets -c     | Limpa a lista de alvos                     |
+
+#+NOTES: Lembre-se de desligar as instâncias EC2 após o lab para evitar custos com o IPv4 público! 💸
+
