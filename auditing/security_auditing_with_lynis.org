@@ -1,0 +1,74 @@
+#+title: Security Auditing With Lynis
+
+
+* objective
+perform a security audit on a linux server using lynis, identify vulnerabilities, and remediate the findings based on the security policy
+
+*installing and running lynis*
+- install lynis on the linux server
+- audit the server with lynis scan on the target server
+- analyze the lynis report to identify security issues
+
+#+begin_src sh
+sudo apt install lynis
+#+end_src
+
+#+begin_src sh
+sudo lynis audit system
+#+end_src
+
+
+* 🔍 Overview of Lynis
+O Lynis é uma ferramenta de auditoria de segurança de código aberto para sistemas baseados em Unix (Linux, macOS, BSD). Ele é amplamente utilizado para auditorias de conformidade (Compliance), endurecimento de sistemas (Hardening) e detecção de vulnerabilidades.
+
+** Key Objectives
+- *Vulnerability Scanning:* Identificar falhas de segurança em software e configurações.
+- *Compliance Testing:* Verificar a aderência a frameworks como ISO 27001, NIST e CIS.
+- *System Hardening:* Fornecer recomendações específicas para fortalecer as defesas do servidor.
+
+* 🚀 Practical Usage: Running the Audit
+Diferente de scanners de rede como o Nmap, o Lynis é executado localmente para obter uma visão profunda do sistema operacional.
+
+** Installation
+No Debian/Kali (suas distros de uso frequente):
+#+BEGIN_SRC bash
+sudo apt update && sudo apt install lynis -y
+#+END_SRC
+
+** Performing a System Audit
+O comando principal para uma auditoria completa:
+#+BEGIN_SRC bash
+lynis audit system
+#+END_SRC
+
+* 🐧 Lynis vs. Linux Security Policy (NIST 800-53)
+O Lynis valida automaticamente os pontos que você definiu na sua política de servidores Linux:
+
+** 🔑 Access Control (AC)
+- *O que o Lynis checa:* Contas de usuário sem senha, arquivos =/etc/passwd= e =/etc/shadow=, e permissões de arquivos críticos.
+- *Alinhamento:* Garante que apenas pessoal autorizado tenha acesso e que contas inativas sejam detectadas.
+
+** 🔐 Authentication (IA)
+- *O que o Lynis checa:* Configurações do serviço SSH (=sshd_config=), verificação de uso de chaves públicas e proibição de login root via senha.
+- *Alinhamento:* Valida se o acesso SSH por senha está desativado conforme sua política.
+
+** 📝 Audit and Accountability (AU)
+- *O que o Lynis checa:* Presença e status do =rsyslog= ou =journald=, e se o daemon de auditoria (=auditd=) está configurado.
+- *Alinhamento:* Confirma se os logs críticos estão sendo capturados e centralizados.
+
+* 📊 Interpreting the Results
+Ao final da execução, o Lynis fornece dois indicadores cruciais:
+
+** Hardening Index
+- Uma pontuação numérica que indica o quão seguro o servidor está.
+- Útil para relatórios de GRC para demonstrar a evolução da segurança ao longo do tempo.
+
+** Suggestions and Warnings
+- *Warnings:* Problemas críticos que devem ser corrigidos imediatamente (ex: vulnerabilidades conhecidas).
+- *Suggestions:* Recomendações de melhoria (ex: habilitar firewall UFW, que você já utiliza em seus labs).
+
+* 💡 Integration with Pentesting
+Como analista de segurança, você pode usar os relatórios do Lynis localizados em =/var/log/lynis.log= para encontrar vetores de escalação de privilégios que passariam despercebidos em um scan manual.
+
+** Example Finding
+Se o Lynis indicar um "Warning" sobre permissões SUID em binários incomuns, este é um alvo imediato para sua fase de exploração técnica.
