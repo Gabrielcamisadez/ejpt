@@ -1,0 +1,44 @@
+#+title: Auditing Process
+
+* Planning and Preparation
+** Define Objectives and Scope
+   - Determinar as metas da auditoria e os objetivos de negócio.
+   - Definir sistemas, processos e controles específicos a serem avaliados.
+** Gather Relevant Documentation
+   - Coletar políticas, procedimentos operacionais (POPs) e diagramas de rede.
+   - Analisar relatórios de auditorias anteriores e histórico de incidentes.
+** Establish Audit Team and Schedule
+   - Montar a equipe técnica e definir as responsabilidades de cada membro.
+   - Estabelecer o cronograma detalhado (milestones) das atividades.
+
+* Information Gathering
+** Review Policies and Procedures
+   - Examinar as políticas de segurança, normas e padrões da organização.
+** Conduct Interviews
+   - Entrevistar pessoal-chave para validar as práticas de segurança declaradas.
+   - Identificar potenciais gaps entre o processo documentado e o executado.
+** Collect Technical Information
+   - Coletar dados de configuração de sistemas, arquitetura de rede e logs.
+   - Mapear os controles de segurança técnica ativos.
+
+* Risk Assessment
+** Identify Assets and Threats
+   - Listar ativos críticos (dados, hardware, software).
+   - Identificar ameaças potenciais (ataques cibernéticos, falhas físicas, erros humanos).
+** Evaluate Vulnerabilities
+   - Avaliar vulnerabilidades existentes nos sistemas e falhas de processo.
+** Determine Risk Levels
+   - Atribuir níveis de risco com base na probabilidade de ocorrência e no impacto no negócio.
+
+* Auditing Execution
+** Perform Technical Testing
+   - Executar testes de invasão (pentests), scans de vulnerabilidade e revisões de configuração.
+   - Validar o endurecimento (hardening) de servidores e endpoints.
+** Verify Compliance
+   - Checar a conformidade com leis (LGPD), regulamentações e padrões do setor (ISO, NIST).
+
+* Reporting and Follow-up
+** Draft Audit Report
+   - Documentar achados, evidências coletadas e recomendações de correção.
+** Remediation Plan
+   - Definir prazos e responsáveis para a mitigação dos riscos encontrados.

@@ -1,0 +1,43 @@
+#+title: Types Of Security Audits
+
+* internal audits
+- conducted by the organization internal audit team or security professionals to evaluate the effectiveness of internal controls and compliance with policies
+
+- internal audits provide insight into the organization self-assessment of its security posture and highlight areas that may require more in-depth testing
+
+- an internal audit might review user access controls to ensure that only authorized personnel have access to sensitive datamation
+
+* external audits
+- performed by independent third-party auditors to provide an unbiased evaluation of the organization security measures and compliance with external standards
+
+- external audits often serve as benchmarks for compliance and security effectiveness. penetration testers can use these findings to guide their testing efforts
+
+- a company undergoing a PCI DSS compliance audit might hire an external auditor to validate its security  control and ensure they meet the required standards
+
+* compliance audits
+- focus on verifying that the organization complies with specific regulatory requirements and industry standards (GDPR, HIPAA, PCI DSS)
+
+- Compliance audits help identify regulatory gaps that penetration testers can address through targeted testing
+
+- a healthcare provider might undergo a HIPAA compliance audit to ensure that patient data is protected according to federal regulations
+
+* technical audits
+- focusing on assessing the technical aspects of the organization IT infrastructure, including hardware, software, and network configurations
+
+- technical audits provides a detailed view of the technical controls in place, highlighting areas where penetration testing can uncover vulnerabilities
+
+- a technical audit might involve a thorough review of firewall configurations to ensure they are properly securing the network perimeter
+
+* network audits
+- assess the security of the organization network infrastructure, including routers, switches, firewalls, and other network devices
+
+- network audits can reveal vulnerabilities in network design and configurations that penetration testers can exploit to assess network security
+
+- a network audit might identify insecure protocols being used for data transmission, prompting penetration testers to test for potential exploits
+
+* applicaiton audits
+- evaluate the security of software applications, focusing on code quality, input validation, authentication mechanisms, and data handling
+
+- applications audits highlight security flaws in applications that penetration testers can exploit to demonstrate real-world attack scenarios
+
+- an application audit might reveal vulnerabilities such as SQL injection or cross-site scripting in a web application
