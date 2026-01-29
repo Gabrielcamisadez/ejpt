@@ -1,43 +1,53 @@
-#+title: Types Of Security Audits
+#+TITLE: Types of Security Audits
 
-* internal audits
-- conducted by the organization internal audit team or security professionals to evaluate the effectiveness of internal controls and compliance with policies
+* 🏠 Internal Audits
+** Definição e Escopo
+   - Realizadas pela equipe interna de auditoria ou profissionais de segurança da própria organização.
+   - O objetivo é avaliar a eficácia dos controles internos e a conformidade com as políticas da empresa.
+** Valor Estratégico
+   - Proporcionam uma visão de autoavaliação da postura de segurança.
+   - Destacam áreas que podem exigir testes mais aprofundados no futuro.
+** Exemplo Prático
+   - Revisão de controles de acesso de usuários para garantir que apenas pessoal autorizado acesse dados sensíveis.
 
-- internal audits provide insight into the organization self-assessment of its security posture and highlight areas that may require more in-depth testing
+* 🌐 External Audits
+** Definição e Escopo
+   - Executadas por auditores independentes (terceirizados).
+   - Fornecem uma avaliação imparcial das medidas de segurança e conformidade com padrões externos.
+** Valor Estratégico
+   - Servem como benchmarks de eficácia de segurança.
+   - Resultados de auditorias externas podem guiar esforços de Pentest (testes de invasão).
+** Exemplo Prático
+   - Uma empresa buscando conformidade com o PCI DSS contrata uma auditoria externa para validar seus controles de pagamento.
 
-- an internal audit might review user access controls to ensure that only authorized personnel have access to sensitive datamation
+* ⚖️ Compliance Audits
+** Definição e Escopo
+   - Focam na verificação de requisitos regulatórios específicos e padrões da indústria (ex: GDPR, LGPD, HIPAA, PCI DSS).
+** Valor Estratégico
+   - Ajudam a identificar lacunas regulatórias que podem ser endereçadas por testes de invasão direcionados.
+** Exemplo Prático
+   - Um provedor de saúde realizando uma auditoria HIPAA para garantir a proteção de dados de pacientes conforme as normas federais.
 
-* external audits
-- performed by independent third-party auditors to provide an unbiased evaluation of the organization security measures and compliance with external standards
+* ⚙️ Technical Audits
+** Definição e Escopo
+   - Avaliação de aspectos técnicos da infraestrutura de TI, incluindo hardware, software e configurações de rede.
+** Valor Estratégico
+   - Fornece uma visão detalhada dos controles técnicos, expondo áreas onde vulnerabilidades podem ser descobertas.
+** Exemplo Prático
+   - Revisão minuciosa das configurações de firewall para garantir a segurança do perímetro da rede.
 
-- external audits often serve as benchmarks for compliance and security effectiveness. penetration testers can use these findings to guide their testing efforts
+* 🔌 Network Audits
+** Definição e Escopo
+   - Avaliam a segurança da infraestrutura de rede: roteadores, switches, firewalls e outros dispositivos.
+** Valor Estratégico
+   - Revelam falhas no design da rede e configurações que podem ser exploradas para comprometer o tráfego de dados.
+** Exemplo Prático
+   - Identificação de protocolos inseguros (como Telnet ou HTTP) sendo usados para transmissão de dados sensíveis.
 
-- a company undergoing a PCI DSS compliance audit might hire an external auditor to validate its security  control and ensure they meet the required standards
-
-* compliance audits
-- focus on verifying that the organization complies with specific regulatory requirements and industry standards (GDPR, HIPAA, PCI DSS)
-
-- Compliance audits help identify regulatory gaps that penetration testers can address through targeted testing
-
-- a healthcare provider might undergo a HIPAA compliance audit to ensure that patient data is protected according to federal regulations
-
-* technical audits
-- focusing on assessing the technical aspects of the organization IT infrastructure, including hardware, software, and network configurations
-
-- technical audits provides a detailed view of the technical controls in place, highlighting areas where penetration testing can uncover vulnerabilities
-
-- a technical audit might involve a thorough review of firewall configurations to ensure they are properly securing the network perimeter
-
-* network audits
-- assess the security of the organization network infrastructure, including routers, switches, firewalls, and other network devices
-
-- network audits can reveal vulnerabilities in network design and configurations that penetration testers can exploit to assess network security
-
-- a network audit might identify insecure protocols being used for data transmission, prompting penetration testers to test for potential exploits
-
-* applicaiton audits
-- evaluate the security of software applications, focusing on code quality, input validation, authentication mechanisms, and data handling
-
-- applications audits highlight security flaws in applications that penetration testers can exploit to demonstrate real-world attack scenarios
-
-- an application audit might reveal vulnerabilities such as SQL injection or cross-site scripting in a web application
+* 📱 Application Audits
+** Definição e Escopo
+   - Avaliam a segurança de aplicações de software, focando em qualidade de código, validação de input e mecanismos de autenticação.
+** Valor Estratégico
+   - Destacam falhas lógicas e de segurança que podem ser exploradas em cenários de ataques reais.
+** Exemplo Prático
+   - Descoberta de vulnerabilidades críticas como SQL Injection (SQLi) ou Cross-Site Scripting (XSS) em aplicações web.
