@@ -29,14 +29,14 @@
    - Avaliar vulnerabilidades existentes nos sistemas e falhas de processo.
 ** Determine Risk Levels
    - Atribuir níveis de risco com base na probabilidade de ocorrência e no impacto no negócio.
-
+     
 * Auditing Execution
 ** Perform Technical Testing
    - Executar testes de invasão (pentests), scans de vulnerabilidade e revisões de configuração.
    - Validar o endurecimento (hardening) de servidores e endpoints.
 ** Verify Compliance
    - Checar a conformidade com leis (LGPD), regulamentações e padrões do setor (ISO, NIST).
-
+     
 * Reporting and Follow-up
 ** Draft Audit Report
    - Documentar achados, evidências coletadas e recomendações de correção.

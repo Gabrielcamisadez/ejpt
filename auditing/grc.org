@@ -1,0 +1,38 @@
+#+title: Grc
+
+* 🏛️ Governance, Risk & Compliance (GRC)
+** ⚖️ Governance
+Refere-se ao framework de políticas, procedimentos e práticas que garantem que uma organização atinja seus objetivos, gerencie seus riscos e esteja em conformidade com requisitos legais e regulatórios.
+
+*** Key Components
+- *Policy Development:* Criação de políticas de segurança claras, abrangentes e alinhadas ao negócio.
+- *Roles and Responsibilities:* Definição precisa de funções e responsabilidades na gestão de segurança (ex: CISO, DPO, Analistas).
+- *Accountability:* Estabelecimento de mecanismos de prestação de contas e métricas de desempenho para a segurança.
+
+** 📉 Risk
+A gestão de riscos envolve o processo cíclico de identificar, avaliar e mitigar ameaças que possam impactar negativamente os ativos e as operações da organização.
+
+*** Key Components
+- *Risk Identification:* Reconhecimento de ameaças potenciais (malware, insiders) e vulnerabilidades técnicas.
+- *Risk Assessment:* Avaliação da probabilidade de ocorrência versus o impacto financeiro e reputacional.
+- *Risk Mitigation:* Implementação de controles (técnicos ou administrativos) para reduzir ou eliminar os riscos identificados.
+
+** 📜 Compliance
+Garante que a organização adira às leis relevantes, regulamentações governamentais e padrões específicos da indústria.
+
+*** Key Components
+- *Regulatory Requirements:* Atendimento a obrigações legais mandatórias como LGPD (Brasil), GDPR (UE) ou HIPAA (Saúde).
+- *Internal Policies:* Adesão estrita às normas e procedimentos internos estabelecidos pela governança.
+- *Audits and Assessments:* Condução de revisões periódicas para validar se os controles de conformidade estão ativos e eficazes.
+
+* 💡 Importance of GRC in Penetration Testing
+Entender o framework de GRC permite que o Pentester atue de forma muito mais cirúrgica e profissional.
+
+** Comprehensive Security Assessment
+- O conhecimento de GRC ajuda o tester a realizar avaliações mais profundas e contextuais, focando no que realmente importa para o "negócio" e não apenas no que é tecnicamente possível.
+
+** Enhanced Reporting
+- Permite que o Pentester escreva relatórios que "falem a língua da diretoria", enquadrando os achados técnicos dentro do contexto de gestão de riscos e violações de conformidade.
+
+** Strategic Recommendations
+- As recomendações deixam de ser apenas "corrija este código" e passam a ser estratégicas, ajudando a fortalecer a postura de segurança geral e o framework de GRC da empresa.
