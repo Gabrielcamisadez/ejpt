@@ -1,0 +1,46 @@
+#+title: Common Standards Frameworks Guidelines
+
+* 🏗️ Frameworks, Standards and Guidelines
+A diferenciação entre estes três conceitos é fundamental para a aplicação correta de controles de segurança.
+
+** Frameworks
+- Proporcionam uma abordagem estruturada para implementar práticas de segurança.
+- São geralmente flexíveis e adaptáveis a diferentes tipos de organizações e indústrias.
+** Standards (Normas)
+- Estabelecem requisitos e critérios específicos que *devem* ser atendidos para alcançar a conformidade.
+- Frequentemente obrigatórios em indústrias regulamentadas (ex: setor financeiro).
+** Guidelines (Diretrizes)
+- Oferecem práticas recomendadas e conselhos para melhorar a segurança.
+- Geralmente não são obrigatórios, mas são considerados "melhores práticas" de mercado.
+
+* 📋 Frameworks
+
+** NIST Cybersecurity Framework (CSF)
+- *Overview:* Conjunto de diretrizes desenvolvidas pelo NIST para ajudar organizações a gerenciar e reduzir riscos de cibersegurança.
+- *Key Focus:* Baseia-se em funções principais: **Identify** (Identificar), **Protect** (Proteger), **Detect** (Detectar), **Respond** (Responder) e **Recover** (Recuperar).
+
+** COBIT (Control Objectives for Information and Related Techs)
+- *Overview:* Framework focado no desenvolvimento, implementação e monitoramento de governança de TI e práticas de gestão.
+- *Key Focus:* Alinhamento das metas de TI com os objetivos de negócio, gestão de riscos de TI e garantia de conformidade regulatória.
+
+* 🎖️ Standards
+
+** ISO/IEC 27001
+- Padrão internacional para Sistemas de Gestão de Segurança da Informação (SGSI/ISMS). Foca na melhoria contínua e gestão de riscos.
+
+** PCI Data Security Standard (PCI DSS)
+- Norma obrigatória para qualquer organização que aceite, processe ou armazene dados de cartões de pagamento (crédito/débito).
+
+** HIPAA (Health Insurance Portability and Accountability Act)
+- Legislação dos EUA que estabelece padrões para a proteção de dados médicos e informações sensíveis de pacientes.
+
+** GDPR / LGPD (General Data Protection Regulation)
+- Regulamentações focadas em privacidade e proteção de dados pessoais (GDPR na UE e LGPD no Brasil).
+
+* 📖 Guidelines
+
+** NIST SP 800-53
+- Um catálogo de controles de segurança e privacidade para sistemas de informação e organizações federais dos EUA, amplamente adotado pelo setor privado.
+
+** CIS Controls (Center for Internet Security)
+- Uma lista priorizada de ações (controles críticos) que formam um conjunto de defesa em profundidade para mitigar os ataques cibernéticos mais comuns.
