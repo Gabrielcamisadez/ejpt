@@ -6,3 +6,8 @@ verificar a existência de algum firewall com o nmap -->
 #+begin_src sh
 sudo nmap -Pn -sA -p445,3389 172.18.0.2
 #+end_src
+
+
+#+begin_src shell
+sda
+#+end_src
