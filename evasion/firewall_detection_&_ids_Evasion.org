@@ -1,13 +1,50 @@
 #+title: Firewall Detection Ids Evasion
 #+author: gabriel
 
-* intro
-verificar a existência de algum firewall com o nmap -->
-#+begin_src sh
+* 🛡️ Intro
+Antes de iniciar um ataque, é vital entender quais defesas de perímetro estão ativas. O Nmap permite identificar se as portas estão abertas, fechadas ou sendo protegidas por um firewall (filtradas).
+
+** ACK Scan (-sA)
+O ACK scan é usado para mapear regras de firewall. Ele ajuda a determinar se as portas estão "Filtered" ou "Unfiltered".
+- *Unfiltered:* A porta respondeu com um RST (o firewall permitiu a passagem do pacote).
+- *Filtered:* Nenhuma resposta ou mensagens de erro ICMP (o firewall bloqueou o pacote).
+
+#+BEGIN_SRC sh
+# Verificando a existência de firewall em portas comuns (SMB e RDP)
 sudo nmap -Pn -sA -p445,3389 172.18.0.2
-#+end_src
+#+END_SRC
 
+* 🕵️ IDS/IPS Evasion Techniques
+Uma vez detectado o firewall, o próximo passo é tentar passar por ele e pelo sistema de detecção de intrusão (IDS) sem gerar alertas.
 
-#+begin_src shell
-sda
-#+end_src
+** Fragmentation (-f)
+Divide os pacotes IP em pedaços menores, dificultando a remontagem e inspeção por parte de alguns firewalls e IDSs mais antigos.
+#+BEGIN_SRC sh
+sudo nmap -Pn -sS -f 172.18.0.2
+#+END_SRC
+
+** Decoys (-D)
+Envia scans de múltiplos endereços IP forjados (decoys) junto com o seu IP real. Isso mascara a origem do ataque nos logs.
+#+BEGIN_SRC sh
+sudo nmap -Pn -D RND:10 172.18.0.2
+#+END_SRC
+
+** Specific Source Port (--source-port)
+Muitos firewalls permitem tráfego vindo de portas específicas (como DNS/53 ou HTTP/80) sem inspeção rigorosa.
+#+BEGIN_SRC sh
+sudo nmap -Pn --source-port 53 172.18.0.2
+#+END_SRC
+
+* ⚖️ GRC & Audit Perspective (NIST SP 800-53)
+Como analista de segurança, você deve auditar se as defesas de rede estão configuradas conforme os padrões:
+
+** Boundary Protection (SC-7)
+- *Auditoria:* O firewall deve seguir o princípio do "Deny by Default" (negar tudo que não é explicitamente permitido).
+- *Pentest Insight:* Se um scan ACK retorna "Unfiltered", a política de firewall pode estar muito permissiva.
+
+** Intrusion Storage and Analysis (SI-4)
+- *Auditoria:* Verifique se o IDS/IPS está gerando alertas para scans fragmentados ou vindo de portas de origem incomuns.
+- *Recomendação:* Implementar inspeção profunda de pacotes (DPI) para evitar que técnicas de fragmentação funcionem.
+
+* 🏁 Conclusion
+A detecção de firewalls é o primeiro passo para o sucesso de um Pentest. Combinar o conhecimento técnico do Nmap com a visão estratégica da **NIST SP 800-53** transforma você de um "executor de ferramentas" em um **analista de segurança consultivo**.
