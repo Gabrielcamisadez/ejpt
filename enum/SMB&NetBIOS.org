@@ -1,0 +1,51 @@
+#+TITLE: SMB & NetBIOS Enumeration (Multi-Compliance Perspective)
+#+AUTHOR: gabriel
+#+DATE: [2026-02-05 qui]
+#+OPTIONS: toc:2
+
+* 📂 Intro to SMB & NetBIOS
+SMB e NetBIOS são tecnologias distintas, mas relacionadas no contexto de redes Windows para compartilhamento de arquivos e recursos.
+
+** Server Message Block (SMB)
+- Protocolo principal para compartilhamento de arquivos e impressoras em redes Windows.
+- Porta moderna: **TCP 445**.
+
+** NetBIOS
+- API e conjunto de protocolos para comunicação em rede local, permitindo que aplicações se encontrem e interajam.
+- Atua como camada legada para o SMB em sistemas antigos.
+
+* 🛠️ NetBIOS Services & Ports
+- *Name Service (NetBIOS-NS):* Resolução de nomes. Porta **UDP 137**.
+- *Datagram Service (NetBIOS-DGM):* Comunicação sem conexão. Porta **UDP 138**.
+- *Session Service (NetBIOS-SSN):* Comunicação orientada a conexão. Porta **TCP 139**.
+
+* 🚀 Practical Enumeration (Preview)
+** 🔍 Basic Scanning
+#+BEGIN_SRC bash
+# Scan de rede para identificar nomes NetBIOS
+sudo nbtscan -r 172.18.0.0/24
+
+# Enumeração detalhada com NetExec (nxc)
+nxc smb 172.18.0.0/24 --shares -u 'guest' -p ''
+#+END_SRC
+
+* ⚖️ GRC & Audit Perspective: Multi-Framework
+Aqui está como a presença e configuração do SMB/NetBIOS impactam diferentes normas:
+
+** 📑 NIST SP 800-53 (EUA/Federal)
+- *CM-7 Least Functionality:* Recomenda desativar o NetBIOS (137-139) se o SMB direto (445) for suficiente, reduzindo a superfície de ataque.
+- *SC-8 Transmission Confidentiality:* Exige proteção dos dados em trânsito; sem SMB Signing ou criptografia, a conformidade falha.
+
+** 🌍 ISO/IEC 27001 (Global/Corporativo)
+- *A.8.9 Configuration Management:* Exige que sistemas sejam endurecidos (hardening). Manter protocolos legados (NetBIOS) sem justificativa de negócio é uma não-conformidade em auditorias ISO.
+- *A.8.15 Logging:* A falta de logs de acesso a compartilhamentos SMB impede a conformidade com o controle de monitoramento de eventos.
+
+** 🛡️ CIS Controls v8 (Defesa Ativa)
+- *Control 4.1: Maintain Inventory of Assets:* O scan de SMB/NetBIOS é frequentemente usado por defensores para validar o inventário de máquinas Windows na rede.
+- *Control 4.8: Uninstall or Disable Unnecessary Services:* O CIS prioriza a desativação do SMBv1 devido a vulnerabilidades críticas como o EternalBlue.
+
+** 🇧🇷 LGPD (Privacidade - Brasil)
+- *Art. 46 (Segurança e Sigilo):* O acesso anômino (Null Sessions) a compartilhamentos SMB que contenham Dados Pessoais é uma violação grave, pois não garante o controle de acesso e a rastreabilidade exigidos pela lei brasileira.
+
+* 🏁 Conclusion
+Dominar SMB e NetBIOS não é apenas sobre "invadir", mas sobre entender como as organizações devem proteger o fluxo de informações. Em um relatório profissional, você deve citar que a desativação de protocolos legados atende tanto à **ISO 27001** quanto aos **CIS Controls**.
