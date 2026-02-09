@@ -10,6 +10,13 @@ we can use msfvenom to generate malicious meterpreter payload that can be transf
 
 O MSFVenom é a combinação do antigo /msfpayload/ e /msfencode/. É a ferramenta padrão do Metasploit para gerar payloads, permitindo a criação de executáveis, scripts e shellcodes para diversas plataformas (Windows, Linux, Android, etc.).
 
+*Staged x Non-staged -->*
+
+| Tipo | Sintaxe do Nome | Exemplo |
+|------+-----------------+---------|
+| *Staged* | Usa uma barra =/= | =windows/x64/meterpreter/reverse_tcp= |
+| *Non-Staged* | Usa um underscore =_= | =windows/x64/meterpreter_reverse_tcp= |
+
 * 🛠️ Estrutura do Comando e Sintaxe
 A construção de um comando msfvenom segue um padrão lógico de opções:
 
