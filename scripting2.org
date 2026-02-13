@@ -1,0 +1,89 @@
+#+TITLE: 📜 Wiki de Shell Scripting: Do Zero ao Script Profissional
+#+AUTHOR: Gabriel
+#+DESCRIPTION: Documentação técnica modular para Obsidian
+
+* 🛠️ FUNDAMENTOS DE SINTAXE
+** 📍 1. Variáveis e Ambiente
+O Shell não perdoa espaços extras. Mantenha a sintaxe justa.
+#+BEGIN_SRC bash
+# 📝 Definição (Sem espaços!)
+SISTEMA="Linux Mint"
+VERSAO=21
+
+# 🔗 Concatenação e Uso
+echo "💻 Rodando em: ${SISTEMA} na versão ${VERSAO}"
+
+# ⚡ Command Substitution (O coração da automação)
+USUARIO_ATUAL=$(whoami)
+DATA_HORA=$(date "+%H:%M:%S")
+#+END_SRC
+
+** 🚦 2. Lógica de Decisão (Testes)
+Fundamental para scripts que precisam ser "inteligentes".
+#+BEGIN_SRC bash
+# 🔍 Comparação Numérica: -eq (==) | -ne (!=) | -gt (>) | -lt (<)
+# 🔍 Comparação de Arquivos: -e (existe) | -z (vazio) | -x (executável)
+
+CHECK_FILE="/etc/passwd"
+
+if [ -e "$CHECK_FILE" ]; then
+    echo "✅ Arquivo $CHECK_FILE encontrado."
+else
+    echo "❌ Erro: Arquivo ausente."
+fi
+#+END_SRC
+
+* 🔄 PROCESSAMENTO DE DADOS
+** 🌀 3. Estruturas de Repetição
+Varra listas ou saídas de comandos sem esforço.
+#+BEGIN_SRC bash
+# 📜 Loop FOR (Listas estáticas ou sequências)
+for i in {1..3}; do
+    echo "🔄 Tentativa número: $i"
+done
+
+# 📥 Loop WHILE (Processando texto dinâmico)
+# O 'read -r' evita que barras invertidas sejam interpretadas
+ls /etc | head -n 5 | while read -r item; do
+    echo "📁 Item no /etc: $item"
+done
+#+END_SRC
+
+** ✂️ 4. O Triângulo do Parsing (Filtros)
+Como tratar qualquer texto no Linux.
+#+BEGIN_SRC bash
+# 1. grep  -> Busca/Filtra linhas
+# 2. awk   -> Extrai colunas (Ex: $1, $2, $NF)
+# 3. sed   -> Edita ou substitui strings
+
+FRASE="Analista:Gabriel:Cybersecurity"
+
+# Exemplo: Trocando ':' por ' | ' e pegando a 2ª coluna
+NOME=$(echo $FRASE | sed 's/:/ /g' | awk '{print $2}')
+echo "👤 Nome extraído: $NOME"
+#+END_SRC
+
+* 🛠️ TOOLKIT DO DESENVOLVEDOR
+** 🐞 5. Debugging e Erros
+Não deixe seu script morrer em silêncio.
+#+BEGIN_SRC bash
+# 🔴 Redirecionamento
+ls /root 2> erros.log      # Salva erros em arquivo
+ping 8.8.8.8 > /dev/null   # Roda em silêncio absoluto
+
+# 🐛 Modo Debug (Adicione no topo do script para ver cada passo)
+# set -x 
+#+END_SRC
+
+** 🎨 6. Interface Humana (UI)
+Scripts didáticos precisam de feedback visual claro.
+#+BEGIN_SRC bash
+# Unicodes para Status
+INFO="ℹ️"
+WARN="⚠️"
+ERROR="🚫"
+SUCCESS="✔️"
+
+echo -e "${SUCCESS} Script finalizado com sucesso!"
+#+END_SRC
+
